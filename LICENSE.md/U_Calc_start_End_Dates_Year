@@ -1,0 +1,30 @@
+COMMENT
+************************************************************************************************************************************************************************************************************************************************
+Name of Current Sub-Script: U_Calc_start_End_Dates_Year
+***
+This utility script is used for calculating the start date, end date and Fiscal Year for the analytic to use as date and fiscal year parameter wherever required.
+The required paramter for this utility script is 'v_Number_of_InScope_PrevMonths' which number of months in scope.
+If you are using filter of start date and fiscal year then value of 'v_Number_of_InScope_PrevMonths' should be 1. The analytic will fail if value of the variable 'v_Number_of_InScope_PrevMonths' is not greater then 1
+
+For some companies the fiscal year changes in month of june or any month of the year. For that the variable 'v_fiscal_month_change' is used here. If your fiscal year changes in the month of june then value for v_fiscal_month_change would be 6. If it is descember than its 12.
+
+************************************************************************************************************************************************************************************************************************************************
+
+COM *** Uncomment below lines after putting appropriate values and then run the script. You can run the below script as subscript by putting the below two line in the script from which the below subscript will be called.
+COM v_Number_of_InScope_PrevMonths = 
+COM v_fiscal_month_change = 
+
+v_Month = v_Number_of_InScope_PrevMonths+1
+
+v_EndDate = SUBSTR( INCLUDE( ALLTRIM(DATE( EOMONTH(TODAY(),-1  ))) "1234567890") 1 8)
+v_StartDate = SUBSTR( INCLUDE( ALLTRIM(DATE( (EOMONTH(TODAY(),-%v_Month%)+ 1  ))) "1234567890") 1 8)
+
+
+COM *** To calculate the Fiscal Year, the fiscal year is current year + 1 if month is >= 9 (September and beyond).  
+
+v_YearMonthCalc = MONTH(`%v_SAPStartDate%`)
+
+IF v_YearMonthCalc < v_fiscal_month_change vFiscalYear = ALLTRIM(STRING(YEAR(`%v_SAPStartDate%`),4))
+IF v_YearMonthCalc >= v_fiscal_month_change vFiscalYear = ALLTRIM(STRING(YEAR(`%v_SAPStartDate%`)+1,4))
+
+COM *** END OF SCRIPT
