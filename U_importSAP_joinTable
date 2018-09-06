@@ -1,0 +1,35 @@
+COMMENT 
+***********************************************************************************************************************************************************************************************************************
+Name of Current Sub-Script: U_importSAP_joinTable
+***
+This subscript runs the import statement and import joined tables based on the parameters given in the scripts 
+***********************************************************************************************************************************************************************************************************************
+END
+
+COMMENT
+Following variables need to be defined for this script to run successfully
+v_cDirectLinkVersion
+v_cSapDestination
+COM *** Query Mode 0 - Immediate/Extract Now   1 - Background
+v_cImportMode    = "1"
+COM *** All Records 0 returns vNumRecords   1 returns all records
+v_cAllRows  = "1"
+vNumRecords  = "5000"
+v_cSapUser
+v_cSapClient
+COM *** the ACL way to define password is different from below line
+PASSWORD 1 
+ v_cAclTableName = 
+ v_cSapParentTableName = 
+ v_cSapParentTableDesc = 
+ v_cParentTableFieldSet =    
+ v_cSapChildTableName = 
+ v_cSapChildTableDesc = 
+ v_cChildTableFieldSet = 
+ v_cParentWhereClause  = 
+ v_joinClause = 
+ END
+
+IMPORT SAP PASSWORD 1 TO %v_cAclTableName%  SAP SOURCE "SAP AGENT" <q version="%v_cDirectLinkVersion%"><s>0</s><d>%v_cSapDestination%</d><u>%v_cSapUser%</u><c>%v_cSapClient%</c><lg>EN</lg><cf>%v_cAclTableName%.fil</cf><sf> </sf><jcount> </jcount><jname> </jname><dl>184 </dl><m>%v_cImportMode%</m><r>500</r><ar>%v_cAllRows%</ar><e>500</e><ts><t><n>%v_cSapParentTableName%</n><a>T00012</a><td>%v_cSapParentTableDesc%</td><fs>%v_cParentTableFieldSet%</fs><wc>%v_cParentWhereClause%</wc></t><t><n>%v_cSapChildTableName%</n><a>T00013</a><td>%v_cSapChildTableDesc%</td><fs>%v_cChildTableFieldSet%</fs><wc></wc></t></ts><js>%v_joinClause%</js></q> 
+
+COM *** END OF SCRIPT
