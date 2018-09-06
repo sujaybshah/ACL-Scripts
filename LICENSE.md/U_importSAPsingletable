@@ -1,0 +1,31 @@
+COMMENT 
+***********************************************************************************************************************************************************************************************************************
+Name of Current Sub-Script: U_importSAPsingletable
+
+***
+This subscript runs the import statement based on the parameters given in the scripts A01_import.
+***********************************************************************************************************************************************************************************************************************
+END
+
+COMMENT
+Following variables need to be defined for this script to run successfully
+v_cDirectLinkVersion
+v_cSapDestination
+COM *** Query Mode 0 - Immediate/Extract Now   1 - Background
+v_cImportMode    = "1"
+COM *** All Records 0 returns vNumRecords   1 returns all records
+v_cAllRows  = "1"
+vNumRecords  = "5000"
+v_cSapUser
+v_cSapClient
+COM *** the ACL way to define password is different from below line
+PASSWORD 1 
+ v_cAclTableName =  
+ v_cSapTableName = 
+ v_cSapTableDesc = 
+ v_cFieldSet     = 
+ v_cWhereClause  =
+ 
+ IMPORT SAP PASSWORD 1 TO %v_cAclTableName% SAP SOURCE "SAP AGENT" <q version="%v_cDirectLinkVersion%"><s>0</s><d>%v_cSapDestination%</d><u>%v_cSapUser%</u><c>%v_cSapClient%</c><lg>EN</lg><cf>%v_cAclTableName%.fil</cf><sf></sf><jcount></jcount><jname></jname><dl>377</dl><m>%v_cImportMode%</m><r>500</r><ar>%v_cAllRows%</ar><e>500</e><ts><t><n>%v_cSapTableName%</n><a>T00001</a><td>%v_cSapTableDesc%</td><fs>%v_cFieldSet%</fs><wc>%v_cWhereClause%</wc></t></ts><js></js></q>
+
+COM *** END OF SCRIPT
