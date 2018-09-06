@@ -25,6 +25,7 @@ PASSWORD 1
  v_cSapTableDesc = 
  v_cFieldSet     = 
  v_cWhereClause  =
+END
  
  IMPORT SAP PASSWORD 1 TO %v_cAclTableName% SAP SOURCE "SAP AGENT" <q version="%v_cDirectLinkVersion%"><s>0</s><d>%v_cSapDestination%</d><u>%v_cSapUser%</u><c>%v_cSapClient%</c><lg>EN</lg><cf>%v_cAclTableName%.fil</cf><sf></sf><jcount></jcount><jname></jname><dl>377</dl><m>%v_cImportMode%</m><r>500</r><ar>%v_cAllRows%</ar><e>500</e><ts><t><n>%v_cSapTableName%</n><a>T00001</a><td>%v_cSapTableDesc%</td><fs>%v_cFieldSet%</fs><wc>%v_cWhereClause%</wc></t></ts><js></js></q>
 
