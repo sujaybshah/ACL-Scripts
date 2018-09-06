@@ -1,0 +1,63 @@
+COMMENT
+****************************************************************************************************************************************
+This utility script is used for generating the where clause to be used in import script to download the SAP table. 
+~~~CAUTION~~~ this script works perfectly with SAP data only. 
+The field name on which where clause is suppose to be built is 'v_Field'
+The variable where list of items on which filter is to be build is given in 'v_List', for example if v_List = "A, B, C" & v_Field = "BUKRS"
+then script will built following value in the variable:
+v_dl_filter_BUKRS = "<w><f>BUKRS</f><o>0</o><l>A</l><h></h></w><w><f>BUKRS</f><o>0</o><l>B</l><h></h></w><w><f>BUKRS</f><o>0</o><l>C</l><h></h></w>"
+The above string can be placed between <wc></wc> tags of import script.
+****************************************************************************************************************************************
+END
+
+COM v_List = 
+COM v_Field =
+
+COM *** Creation of T_STUB
+
+SET FOLDER TO /Temp
+
+DIR *.* TO TempDir
+
+OPEN TempDir
+ EXTRACT FIELDS BLANKS(1)  AS 'FullRecord' TO t_STUB
+
+CLOSE
+
+
+DELETE TempDIR.FIL OK
+DELETE FORMAT TempDir OK
+COM *** This script will take a variable (v_list) and create a string that contains a filter string for Direct Link
+
+v_list_counter = 0
+IF LEN( ALLTRIM( EXCLUDE( v_list ",'"))) > 0 AND OCCURS(v_list ',') = 0 v_list_counter = 1
+IF OCCURS(v_list ',') > 0 v_list_counter = OCCURS(v_list ',') + 1
+
+v_dl_filter    = BLANKS(25000)
+v_i_counter     = 1
+
+OPEN T_Stub
+GROUP
+   LOOP WHILE v_i_counter <= v_list_counter 
+    v_curr_list = ALLTRIM(EXCLUDE(SPLIT(v_list ',' v_i_counter) "'"))
+    v_dl_filter = ALLTRIM(ALLTRIM(v_dl_filter) + '<w><f>%v_field%</f><o>0</o><l>' + ALLTRIM(v_curr_list) + '</l><h></h></w>')
+    v_i_counter = v_i_counter + 1
+   END
+END
+
+COMMENT *** Assign the field name to the variable. 
+
+v_dl_filter_%v_field% = ALLTRIM(v_dl_filter)
+
+COMMENT
+********************************************************************************
+Script Closure
+********************************************************************************
+END
+
+COMMENT *** Delete all variables created by this script (except v_DL_filter)
+
+DELETE v_field OK 
+DELETE v_list OK 
+DELETE v_curr_list OK 
+DELETE v_i_counter OK 
